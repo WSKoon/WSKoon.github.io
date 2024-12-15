@@ -97,6 +97,18 @@ function createLiftsOverTimePlot(data: any[]) {
         };
         traces.push(squatTrace);
 
+        const benchTrace = {
+            x: validBenchData.map(row => row.Date),
+            y: validBenchData.map(row => row.Bench),
+            name: 'Bench',
+            mode: 'lines+markers',
+            type: 'scatter',
+            line: { color: 'red' },
+            hovertext: validBenchData.map((row) => getAttemptText(row, 'Bench')),
+            hoverinfo: 'text+x+y',
+        };
+        traces.push(benchTrace);
+
         const deadliftTrace = {
             x: validDeadliftData.map(row => row.Date),
             y: validDeadliftData.map(row => row.Deadlift),
@@ -177,10 +189,11 @@ function createAttemptsGraph(data: any[], lift: string, containerId: string) {
         const xValues = attempts.length > 0 ? [1, 2, 3].slice(0, attempts.length) : [];
         const formattedDate = row.Date.toISOString().split('T')[0];
 
+        // Generate hover text: includes date, attempt number, and weight
         const hovertext = attemptColumns.map((col, index) => {
-            const attempt = (row[col] && !isNaN(row[col]) && row[col] > 0) ? `${row[col]} kg` : 'Failed';
-            return `${lift} Attempt ${index + 1}: ${attempt}`;
-        });
+            const weight = row[col] && row[col] > 0 ? `${row[col]} kg` : 'Failed';
+            return `Date: ${formattedDate}<br>Attempt ${index + 1}: ${weight}`;
+        }).filter((_, index) => xValues.includes(index + 1)); // Ensure hover text matches valid x values
 
         return {
             x: xValues,
