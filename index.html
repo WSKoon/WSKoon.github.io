@@ -5,6 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Lifts Plot</title>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Container to hold both the graph and the table */
+        .container {
+            display: flex;
+            flex-direction: row;  /* Default layout: horizontal */
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        /* Main graph */
+        #plot-lifts {
+            width: 70%; /* Default width */
+            height: 400px;
+        }
+
+        /* Summary Table */
+        #summary-container {
+            width: 28%; /* Default width */
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Responsive Design with Media Queries */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;  /* Stacking vertically on smaller screens */
+                align-items: center;
+            }
+
+            #plot-lifts, #summary-container {
+                width: 100%;  /* Take full width for mobile */
+                padding: 10px;
+            }
+
+            #summary-container {
+                padding-left: 0;  /* Remove extra padding on mobile */
+                margin-top: 20px;  /* Add space between graph and table */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;  /* Smaller font size for mobile screens */
+            }
+
+            table, th, td {
+                font-size: 12px;  /* Smaller font size for mobile screens */
+            }
+        }
+    </style>  
 </head>
 <body>
     <h1>Performance Visualizer</h1>

@@ -98,8 +98,7 @@ function createLiftsOverTimePlot(data: any[]) {
         xaxis: { title: 'Date' },
         yaxis: { title: 'Lifts (Kg)' },
         hovermode: 'closest', // Highlight the closest data point
-        width:600,
-        height:600
+
     };
 
     // Render the main plot
@@ -163,8 +162,7 @@ function createAttemptsGraph(data: any[], lift: string, containerId: string) {
         xaxis: { title: 'Attempt Number', tickvals: [1, 2, 3], ticktext: ['Attempt 1', 'Attempt 2', 'Attempt 3'] },
         yaxis: { title: `${lift} Weight (Kg)` },
         hovermode: 'closest', // Hover interaction
-        width:600,
-        height:600,
+
     };
 
     Plotly.newPlot(containerId, traces, layout);
