@@ -5,7 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Lifts Plot</title>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
-  <script type="module" crossorigin src="https://WSKoon.github.io/assets/index-Ds3uPVEJ.js"></script>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Container to hold both the graph and the table */
+        .container {
+            display: flex;
+            flex-direction: column;  /* Default layout: horizontal */
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        /* Main graph */
+        #plot-lifts {
+            width: 70%; /* Default width */
+            height: 400px;
+        }
+
+        /* Summary Table */
+        #summary-container {
+            width: 28%; /* Default width */
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Responsive Design with Media Queries */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;  /* Stacking vertically on smaller screens */
+                align-items: center;
+            }
+
+            #plot-lifts, #summary-container {
+                width: 100%;  /* Take full width for mobile */
+                padding: 10px;
+            }
+
+            #summary-container {
+                padding-left: 0;  /* Remove extra padding on mobile */
+                margin-top: 20px;  /* Add space between graph and table */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;  /* Smaller font size for mobile screens */
+            }
+
+            table, th, td {
+                font-size: 12px;  /* Smaller font size for mobile screens */
+            }
+        }
+    </style>  
+  <script type="module" crossorigin src="/WSKoon.github.io/assets/index-C6dNUVJB.js"></script>
 </head>
 <body>
     <h1>Performance Visualizer</h1>
@@ -13,18 +90,22 @@
         <input type="file" id="fileInput" accept=".csv" />
         <button type="submit">Upload and Visualize</button>
     </form>
+    <div id="summary-info" class="'summary-info">
+
+    </div>
 
     <!-- Main Plot for Squat, Bench, Deadlift, and Total -->
     <div id="plot-lifts" style="width: 100%; height: 500px;"></div>
 
     <!-- Plot for Squat Attempts -->
     <div id="plot-squat" style="width: 100%; height: 400px;"></div>
-
+    <div id="squat-stats" class="lift-stats"></div>
     <!-- Plot for Bench Attempts -->
     <div id="plot-bench" style="width: 100%; height: 400px;"></div>
-
+    <div id="bench-stats" class="lift-stats"></div>
     <!-- Plot for Deadlift Attempts -->
     <div id="plot-deadlift" style="width: 100%; height: 400px;"></div>
+    <div id="deadlift-stats" class="lift-stats"></div>
 
 </body>
 </html>
