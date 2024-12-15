@@ -12,15 +12,19 @@
         <input type="file" id="fileInput" accept=".csv" />
         <button type="submit">Upload and Visualize</button>
     </form>
-    <div>
-        <label>
-            <input type="checkbox" id="toggleGL" checked /> Show GL Points
-        </label>
-        <label>
-            <input type="checkbox" id="toggleBodyweight" checked /> Show Bodyweight
-        </label>
-    </div>
-    <div id="plot-lifts"></div>
+
+    <!-- Main Plot for Squat, Bench, Deadlift, and Total -->
+    <div id="plot-lifts" style="width: 100%; height: 500px;"></div>
+
+    <!-- Plot for Squat Attempts -->
+    <div id="plot-squat" style="width: 100%; height: 400px;"></div>
+
+    <!-- Plot for Bench Attempts -->
+    <div id="plot-bench" style="width: 100%; height: 400px;"></div>
+
+    <!-- Plot for Deadlift Attempts -->
+    <div id="plot-deadlift" style="width: 100%; height: 400px;"></div>
+
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
