@@ -84,14 +84,32 @@
     </style>  
 </head>
 <body>
-    <h1>Performance Visualizer</h1>
+    <h1>OpenIPF Visualizer</h1>
     <form id="uploadForm">
         <input type="file" id="fileInput" accept=".csv" />
         <button type="submit">Upload and Visualize</button>
     </form>
-    <div id="summary-info" class="'summary-info">
 
+    <!-- Filters for Event and Equipment -->
+    <div class="filters">
+        <div>
+            <strong>Event:</strong>
+            <label for="sbd">SBD</label>
+            <input type="radio" id="sbd" name="event" value="SBD" checked>
+            <label for="bOnly">Bench Only</label>
+            <input type="radio" id="bOnly" name="event" value="B">
+        </div>
+        <div>
+            <strong>Equipment:</strong>
+            <label for="raw">Raw</label>
+            <input type="radio" id="raw" name="equipment" value="Raw" checked>
+            <label for="singlePly">Single-ply</label>
+            <input type="radio" id="singlePly" name="equipment" value="Single-ply">
+        </div>
     </div>
+
+    <!-- Summary Section -->
+    <div id="summary-info" class="summary-info"></div>
 
     <!-- Main Plot for Squat, Bench, Deadlift, and Total -->
     <div id="plot-lifts" style="width: 100%; height: 500px;"></div>
@@ -106,6 +124,7 @@
     <div id="plot-deadlift" style="width: 100%; height: 400px;"></div>
     <div id="deadlift-stats" class="lift-stats"></div>
 
+    <!-- Link to your compiled TypeScript file (main.ts) -->
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
