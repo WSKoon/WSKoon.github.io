@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV Data Visualizer</title>
+    <title>Interactive Lifts Plot</title>
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
 </head>
 <body>
-    <h1>CSV Data Visualizer</h1>
+    <h1>Performance Visualizer</h1>
     <form id="uploadForm">
         <input type="file" id="fileInput" accept=".csv" />
         <button type="submit">Upload and Visualize</button>
     </form>
-    <h2>Graphs</h2>
-    <div id="plot"></div>
-    <h2>Summary Table</h2>
-    <div id="summaryTable"></div>
+    <div>
+        <label>
+            <input type="checkbox" id="toggleGL" checked /> Show GL Points
+        </label>
+        <label>
+            <input type="checkbox" id="toggleBodyweight" checked /> Show Bodyweight
+        </label>
+    </div>
+    <div id="plot-lifts"></div>
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
