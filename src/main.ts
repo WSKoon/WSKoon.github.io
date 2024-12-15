@@ -174,46 +174,61 @@ function createLiftsOverTimePlot(data: any[]) {
 // Function to create individual attempts graph for each lift (Squat, Bench, Deadlift)
 function createAttemptsGraph(data: any[], lift: string, containerId: string) {
     const dates = data.map((row) => row.Date);
+
+    // Define color mapping for each lift (consistent with the main graph)
     const liftColors: { [key: string]: string } = {
         'Squat': 'blue',
         'Bench': 'red',
         'Deadlift': 'green',
     };
 
+    // Attempt columns for Squat, Bench, and Deadlift
     const attemptColumns = [`${lift}1Kg`, `${lift}2Kg`, `${lift}3Kg`];
-    const traces = data.map((row) => {
-        const attempts = attemptColumns.map((col, index) => {
-            return (row[col] && !isNaN(row[col]) && row[col] > 0) ? row[col] : null;
-        }).filter(weight => weight !== null);
 
-        const xValues = attempts.length > 0 ? [1, 2, 3].slice(0, attempts.length) : [];
+    // Creating traces for each date
+    const traces = data.map((row) => {
+        // Initialize x and y values with placeholders for alignment
+        const xValues: number[] = [1, 2, 3]; // Fixed x-axis positions for attempts
+        const yValues: (number | null)[] = [null, null, null]; // Default to null for all attempts
+        const hovertext: string[] = []; // Stores hover text for all attempts
+
+        // Format the date as 'YYYY-MM-DD' for the hover text
         const formattedDate = row.Date.toISOString().split('T')[0];
 
-        // Generate hover text: includes date, attempt number, and weight
-        const hovertext = attemptColumns.map((col, index) => {
-            const weight = row[col] && row[col] > 0 ? `${row[col]} kg` : 'Failed';
-            return `Date: ${formattedDate}<br>Attempt ${index + 1}: ${weight}`;
-        }).filter((_, index) => xValues.includes(index + 1)); // Ensure hover text matches valid x values
+        // Populate yValues and hover text for each attempt
+        attemptColumns.forEach((col, index) => {
+            const weight = row[col]; // Weight for this attempt
+            if (weight && weight > 0) {
+                // Valid attempt
+                yValues[index] = weight; // Assign weight to the corresponding x-position
+                hovertext.push(`Date: ${formattedDate}<br>Attempt ${index + 1}: ${weight} kg`);
+            } else {
+                // Failed or invalid attempt
+                hovertext.push(`Date: ${formattedDate}<br>Attempt ${index + 1}: Failed`);
+            }
+        });
 
         return {
-            x: xValues,
-            y: attempts,
-            name: formattedDate,
+            x: xValues, // Fixed x-axis positions
+            y: yValues, // Include nulls for failed attempts
+            name: formattedDate, // Simplified legend name (date in 'YYYY-MM-DD' format)
             mode: 'lines+markers',
             type: 'scatter',
-            line: { color: liftColors[lift] },
-            hovertext: hovertext,
+            line: { color: liftColors[lift] }, // Use the color assigned to each lift
+            hovertext: hovertext, // Show hover-over text with details
             hoverinfo: 'text+x+y',
         };
     });
 
+    // Layout configuration for the graph
     const layout = {
         title: `${lift} Attempts`,
         xaxis: { title: 'Attempt Number', tickvals: [1, 2, 3], ticktext: ['Attempt 1', 'Attempt 2', 'Attempt 3'] },
         yaxis: { title: `${lift} Weight (Kg)` },
-        hovermode: 'closest',
+        hovermode: 'closest', // Hover interaction
     };
 
+    // Render the individual lift graph
     Plotly.newPlot(containerId, traces, layout);
     displayLiftStats(data, lift);
 }
