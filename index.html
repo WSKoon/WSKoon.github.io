@@ -22,7 +22,7 @@
         /* Container to hold both the graph and the table */
         .container {
             display: flex;
-            flex-direction: row;  /* Default layout: horizontal */
+            flex-direction: column;  /* Default layout: horizontal */
             justify-content: space-between;
             padding: 20px;
         }
@@ -89,18 +89,22 @@
         <input type="file" id="fileInput" accept=".csv" />
         <button type="submit">Upload and Visualize</button>
     </form>
+    <div id="summary-info" class="'summary-info">
+
+    </div>
 
     <!-- Main Plot for Squat, Bench, Deadlift, and Total -->
     <div id="plot-lifts" style="width: 100%; height: 500px;"></div>
 
     <!-- Plot for Squat Attempts -->
     <div id="plot-squat" style="width: 100%; height: 400px;"></div>
-
+    <div id="squat-stats" class="lift-stats"></div>
     <!-- Plot for Bench Attempts -->
     <div id="plot-bench" style="width: 100%; height: 400px;"></div>
-
+    <div id="bench-stats" class="lift-stats"></div>
     <!-- Plot for Deadlift Attempts -->
     <div id="plot-deadlift" style="width: 100%; height: 400px;"></div>
+    <div id="deadlift-stats" class="lift-stats"></div>
 
     <script type="module" src="/src/main.ts"></script>
 </body>
