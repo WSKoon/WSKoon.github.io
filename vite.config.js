@@ -1,4 +1,4 @@
 export default {
-    base: '/WSKoon.github.io/'
+    base: 'https://WSKoon.github.io/'
 }
 
