@@ -91,21 +91,21 @@ function createLiftsOverTimePlot(data: any[]) {
     // mk plots
     if (eventFilter === 'SBD') {
         const squatTrace = {
-        createPlotTrace(validSquatData, 'Squat', 'blue', row => getAttemptText(row, 'Squat')),
+        makeTraces(validSquatData, 'Squat', 'blue', row => getAttemptText(row, 'Squat')),
         };
         traces.push(squatTrace);        
         const benchTrace = {
-        createPlotTrace(validBenchData, 'Bench', 'red', row => getAttemptText(row, 'Bench')),
+        makeTraces(validBenchData, 'Bench', 'red', row => getAttemptText(row, 'Bench')),
         };
         traces.push(benchTrace);
         const deadliftTrace = {
-        createPlotTrace(validDeadliftData, 'Deadlift', 'green', row => getAttemptText(row, 'Deadlift')),
+        makeTraces(validDeadliftData, 'Deadlift', 'green', row => getAttemptText(row, 'Deadlift')),
         };
         traces.push(deadliftTrace);
     } else if (eventFilter === 'B') {
         // Only for Bench event, plot Bench data
         const benchTrace = {
-        createPlotTrace(validBenchData, 'Bench', 'red', row => getAttemptText(row, 'Bench')),        
+        makeTraces(validBenchData, 'Bench', 'red', row => getAttemptText(row, 'Bench')),        
         };
         traces.push(benchTrace);
     }
