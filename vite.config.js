@@ -1,4 +1,4 @@
 export default {
-    base: '/'
+    base: '/OpenIPF_Visualisations/'
 }
 
