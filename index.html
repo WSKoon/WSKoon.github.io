@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Lifts Plot</title>
+    <title>OpenIPF Visualiser</title>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
     <style>
         /* Basic Styling */
@@ -53,22 +53,22 @@
             padding: 8px;
             text-align: center;
         }
-
-        /* Responsive Design with Media Queries */
+        
+        /* Stacking vertically on smaller screens */
         @media (max-width: 768px) {
             .container {
-                flex-direction: column;  /* Stacking vertically on smaller screens */
+                flex-direction: column;  
                 align-items: center;
             }
 
             #plot-lifts, #summary-container {
-                width: 100%;  /* Take full width for mobile */
+                width: 100%;  
                 padding: 10px;
             }
 
             #summary-container {
-                padding-left: 0;  /* Remove extra padding on mobile */
-                margin-top: 20px;  /* Add space between graph and table */
+                padding-left: 0;  
+                margin-top: 20px;  
             }
         }
 
@@ -85,7 +85,7 @@
     <meta name="google-site-verification" content="sz3nGYzVk3jdWnikC50q0sZajRupGAbAsWQpr8IiTBI" />
 </head>
 <body>
-    <h1>OpenIPF Visualizer</h1>
+    <h1>OpenIPF Visualiser</h1>
     <p>Welcome to my openIPF visualiser! This is very much work in progress.
         If you have any questions or suggestions, lmk on instagram @powerliftwing!
         To get started, download your file from the openIPF/openpowerlifting website.
@@ -111,7 +111,7 @@
         <button type="submit">Upload and Visualize</button>
     </form>
 
-    <!-- Filters for Event and Equipment -->
+    <!-- Event and Equipment -->
     <div class="filters">
         <div>
             <strong>Event:</strong>
@@ -145,7 +145,6 @@
     <div id="plot-deadlift" style="width: 100%; height: 400px;"></div>
     <div id="deadlift-stats" class="lift-stats"></div>
 
-    <!-- Link to your compiled TypeScript file (main.ts) -->
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
