@@ -3,7 +3,7 @@ import Plotly from 'plotly.js-dist-min';
 
 let filteredData: any[] = [];
 
-// process csv
+// Function to filter and process the CSV data
 function filterColumns(data: Array<{ [key: string]: string | number }>, eventFilter: string, equipmentFilter: string) {
     return data.map((row) => {
         return {
@@ -30,45 +30,39 @@ function filterColumns(data: Array<{ [key: string]: string | number }>, eventFil
         };
     }).filter((row) => {
         // Apply both Event and Equipment filters
-        const eventMatches = row.Event === eventFilter;
-        const equipmentMatches =row.Equipment === equipmentFilter;
+        const eventMatches = eventFilter === 'all' || row.Event === eventFilter;
+        const equipmentMatches = equipmentFilter === 'all' || row.Equipment === equipmentFilter;
         return eventMatches && equipmentMatches && row.Date instanceof Date && !isNaN(row.Date.getTime());
     });
 }
 
 
-//update the plot based on the filtered data
+// Function to update the plot based on the filtered data
 function updatePlots(filteredData: any[]) {
     createLiftsOverTimePlot(filteredData);
     generateSummaryInfo(filteredData);
 }
 
+// Function to handle filter changes
 function handleFilterChange() {
     const eventFilter = (document.querySelector('input[name="event"]:checked') as HTMLInputElement).value;
     const equipmentFilter = (document.querySelector('input[name="equipment"]:checked') as HTMLInputElement).value;
-const filtered = filterColumns(filteredData, eventFilter, equipmentFilter);
- updatePlots(filtered);
+
+    // Filter the data based on selected filters
+    const filtered = filterColumns(filteredData, eventFilter, equipmentFilter);
+    
+    // Update the plots with the filtered data
+    updatePlots(filtered);
 }
 
-function makeTraces(data: any[], lift: string, color: string, hoverTextCallback: (row: any) => string): any{
-    return {
-        x: data.map(row => row.Date),
-        y: data.map(row => row[lift]),
-        name: lift,
-        mode: 'lines+markers',
-        line: { color: color },
-        hoverinfo: 'text+x+y',
-  };
-}
-
-//main plot
+// Function to create the main plot (Squat, Bench, Deadlift, and Total over time)
 function createLiftsOverTimePlot(data: any[]) {
     const eventFilter = (document.querySelector('input[name="event"]:checked') as HTMLInputElement)?.value;
     const equipmentFilter = (document.querySelector('input[name="equipment"]:checked') as HTMLInputElement)?.value;
     const dates = data.map((row) => row.Date);
     let traces: any[] = [];
 
-    // attempt text
+    // Function to generate attempt hover text
     function getAttemptText(row: any, lift: string) {
         const attemptColumns = [`${lift}1Kg`, `${lift}2Kg`, `${lift}3Kg`];
         return attemptColumns.map((col, index) => {
@@ -77,47 +71,81 @@ function createLiftsOverTimePlot(data: any[]) {
         }).join('<br>');
     }
 
-//failed attempts
+    // Helper function to check if all attempts are failed (negative values or invalid)
     function hasValidAttempts(row: any, lift: string) {
         const attemptColumns = [`${lift}1Kg`, `${lift}2Kg`, `${lift}3Kg`];
         return attemptColumns.some(col => row[col] > 0 && row[col] !== null && !isNaN(row[col])); // At least one valid attempt
     }
 
-    // rm lifts with all failed attempts
+    // Filter the data to remove lifts with all failed attempts
     const validSquatData = data.filter(row => hasValidAttempts(row, 'Squat'));
     const validDeadliftData = data.filter(row => hasValidAttempts(row, 'Deadlift'));
     const validBenchData = data.filter(row => hasValidAttempts(row, 'Bench'));
 
-    // mk plots
-    if (eventFilter === 'SBD') {
+    // Plot based on event and equipment filter
+    if (eventFilter === 'SBD' || eventFilter === 'all') {
+        // For SBD or all event, plot Squat, Deadlift, and Bench
         const squatTrace = {
-        makeTraces(validSquatData, 'Squat', 'blue', row => getAttemptText(row, 'Squat')),
+            x: validSquatData.map(row => row.Date),
+            y: validSquatData.map(row => row.Squat),
+            name: 'Squat',
+            mode: 'lines+markers',
+            type: 'scatter',
+            line: { color: 'blue' },
+            hovertext: validSquatData.map((row) => getAttemptText(row, 'Squat')),
+            hoverinfo: 'text+x+y',
         };
-        traces.push(squatTrace);        
+        traces.push(squatTrace);
+
         const benchTrace = {
-        makeTraces(validBenchData, 'Bench', 'red', row => getAttemptText(row, 'Bench')),
+            x: validBenchData.map(row => row.Date),
+            y: validBenchData.map(row => row.Bench),
+            name: 'Bench',
+            mode: 'lines+markers',
+            type: 'scatter',
+            line: { color: 'red' },
+            hovertext: validBenchData.map((row) => getAttemptText(row, 'Bench')),
+            hoverinfo: 'text+x+y',
         };
         traces.push(benchTrace);
+
         const deadliftTrace = {
-        makeTraces(validDeadliftData, 'Deadlift', 'green', row => getAttemptText(row, 'Deadlift')),
+            x: validDeadliftData.map(row => row.Date),
+            y: validDeadliftData.map(row => row.Deadlift),
+            name: 'Deadlift',
+            mode: 'lines+markers',
+            type: 'scatter',
+            line: { color: 'green' },
+            hovertext: validDeadliftData.map((row) => getAttemptText(row, 'Deadlift')),
+            hoverinfo: 'text+x+y',
         };
         traces.push(deadliftTrace);
     } else if (eventFilter === 'B') {
         // Only for Bench event, plot Bench data
         const benchTrace = {
-        makeTraces(validBenchData, 'Bench', 'red', row => getAttemptText(row, 'Bench')),        
+            x: validBenchData.map(row => row.Date),
+            y: validBenchData.map(row => row.Bench),
+            name: 'Bench',
+            mode: 'lines+markers',
+            type: 'scatter',
+            line: { color: 'red' },
+            hovertext: validBenchData.map((row) => getAttemptText(row, 'Bench')),
+            hoverinfo: 'text+x+y',
         };
         traces.push(benchTrace);
     }
 
-    // not using func for tot because i want dashed
+    // Always plot Total if available
     const totalTrace = {
-        x: data.map(row => row.Date),
-        y: data.map(row => row[lift]),
-        name: lift,
+        x: data.map((row) => row.Date),
+        y: data.map((row) => row.Total),
+        name: 'Total',
         mode: 'lines+markers',
+        type: 'scatter',
         line: { color: 'black', dash: 'dash' },
-        hoverinfo: 'text+x+y',    };
+        hovertext: data.map((row) => `Bodyweight: ${row.Bodyweight} kg<br>GL: ${row.GL}`),
+        hoverinfo: 'text+x+y',
+    };
     traces.push(totalTrace);
 
     const layout = {
@@ -125,6 +153,9 @@ function createLiftsOverTimePlot(data: any[]) {
         xaxis: { title: 'Date' },
         yaxis: { title: 'Lifts (Kg)' },
         hovermode: 'closest',
+        paper_bgcolor: '#e8e6e7',
+        plot_bgcolor: '#e8e6e7',
+
     };
 
     // Render the main plot
@@ -198,6 +229,8 @@ function createAttemptsGraph(data: any[], lift: string, containerId: string) {
         xaxis: { title: 'Attempt Number', tickvals: [1, 2, 3], ticktext: ['Attempt 1', 'Attempt 2', 'Attempt 3'] },
         yaxis: { title: `${lift} Weight (Kg)` },
         hovermode: 'closest', // Hover interaction
+        paper_bgcolor: '#e8e6e7',
+        plot_bgcolor: '#e8e6e7',
     };
 
     // Render the individual lift graph
@@ -226,9 +259,10 @@ document.getElementById('uploadForm')!.addEventListener('submit', (event) => {
 
 function displayLiftStats(data: any[], lift: string) {
     const eventFilter = (document.querySelector('input[name="event"]:checked') as HTMLInputElement)?.value;
-    //bench only comp info
+
+    // If the event is B, only show the Bench data (or corresponding lift)
     if (eventFilter === 'B' && lift !== 'Bench') {
-        return;
+        return;  // Skip if the event is B and the lift is not Bench
     }
 
     let jump1to2: number[] = [];
@@ -253,7 +287,7 @@ function displayLiftStats(data: any[], lift: string) {
             jump1to3.push(attempt3 - attempt1);
         }
 
-        // successful third attempts
+        // Count successful third attempts
         if (attempt3 && attempt3 > 0) {
             thirdAttemptSuccess++;
         }
@@ -268,7 +302,7 @@ function displayLiftStats(data: any[], lift: string) {
     const avgJump1to3 = (jump1to3.length > 0) ? (jump1to3.reduce((a, b) => a + b, 0) / jump1to3.length).toFixed(2) : 0;
     const thirdAttemptSuccessRate = (totalAttempts > 0) ? ((thirdAttemptSuccess / totalAttempts) * 100).toFixed(2) : 0;
 
-    // stats container
+    // Update the stats container with the calculated stats
     const statsContainer = document.getElementById(`${lift.toLowerCase()}-stats`) as HTMLElement;
     const statsHtml = `
         <div><strong>${lift} Stats:</strong></div>
@@ -280,14 +314,14 @@ function displayLiftStats(data: any[], lift: string) {
     statsContainer.innerHTML = statsHtml;
 }
 
-//athlete summary
+// Function to generate the summary info before the graph
 function generateSummaryInfo(data: any[]) {
     // Get the most recent data (latest entry) for Weight Class and Name
     const mostRecentData = data.reduce((latest, row) => {
         return new Date(row.Date) > new Date(latest.Date) ? row : latest;
     });
 
-    // calcs
+    // Extract the necessary values
     const name = mostRecentData.Name || 'N/A';
     const weightClass = mostRecentData.WeightClassKg || 'N/A';
     const bestSquat = Math.max(...data.map((row) => row.Squat || 0));
@@ -295,13 +329,7 @@ function generateSummaryInfo(data: any[]) {
     const bestDeadlift = Math.max(...data.map((row) => row.Deadlift || 0));
     const total = bestSquat + bestBench + bestDeadlift;
 
-        const sqperc = (bestSquat/total)*100 
-        const bperc = (bestBecch/total)*100 
-        const dperc = (bestDeadlift/total)*100
-    const ratio = `${sqperc.toFixed(2)}:${bperc.toFixed(2)}:${dperc.toFixed(2)}%`;
-
-
-    // summary txt
+    // Populate the summary info section
     const summaryInfo = document.getElementById('summary-info') as HTMLElement;
     summaryInfo.innerHTML = `
         <div><strong>Name:</strong> ${name}</div>
@@ -310,7 +338,5 @@ function generateSummaryInfo(data: any[]) {
         <div><strong>Best Bench:</strong> ${bestBench} kg</div>
         <div><strong>Best Deadlift:</strong> ${bestDeadlift} kg</div>
         <div><strong>Total of Best Lifts:</strong> ${total} kg</div>
-        <div><strong>SBD Ratio:</strong> ${ratio} <div>
     `;
 }
-
