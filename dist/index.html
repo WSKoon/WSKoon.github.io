@@ -3,28 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Lifts Plot</title>
+    <title>OpenIPF Visualiser</title>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
     <style>
         /* Basic Styling */
         body {
-            font-family: Arial, sans-serif;
+            text-align: center;
+            font-family: Georgia,serif;
             margin: 0;
-            padding: 0;
+            padding: 10px;
             box-sizing: border-box;
+            background-color: #f4f4f4;
         }
-
         h1 {
+            background-color: #fdb93e;
             text-align: center;
             padding: 20px;
         }
-
+        p {
+          text-align: center;
+        }
         /* Container to hold both the graph and the table */
         .container {
             display: flex;
             flex-direction: column;  /* Default layout: horizontal */
             justify-content: space-between;
             padding: 20px;
+             align-items: center;
+
         }
 
         /* Main graph */
@@ -38,6 +44,8 @@
             width: 28%; /* Default width */
             padding-left: 20px;
             padding-top: 20px;
+              align-items: center;
+
         }
 
         table {
@@ -53,22 +61,22 @@
             padding: 8px;
             text-align: center;
         }
-
-        /* Responsive Design with Media Queries */
+        
+        /* Stacking vertically on smaller screens */
         @media (max-width: 768px) {
             .container {
-                flex-direction: column;  /* Stacking vertically on smaller screens */
+                flex-direction: column;  
                 align-items: center;
             }
 
             #plot-lifts, #summary-container {
-                width: 100%;  /* Take full width for mobile */
+                width: 100%;  
                 padding: 10px;
             }
 
             #summary-container {
-                padding-left: 0;  /* Remove extra padding on mobile */
-                margin-top: 20px;  /* Add space between graph and table */
+                padding-left: 10px;  
+                margin-top: 20px;  
             }
         }
 
@@ -83,36 +91,31 @@
         }
     </style>  
     <meta name="google-site-verification" content="sz3nGYzVk3jdWnikC50q0sZajRupGAbAsWQpr8IiTBI" />
-  <script type="module" crossorigin src="/assets/index-DU8_lKOC.js"></script>
+  <script type="module" crossorigin src="/assets/index-Cpt13JGk.js"></script>
 </head>
 <body>
-    <h1>OpenIPF Visualizer</h1>
-    <p>Welcome to my openIPF visualiser! This is very much work in progress.
-        If you have any questions or suggestions, lmk on instagram @powerliftwing!
-        To get started, download your file from the openIPF/openpowerlifting website.
+    <h1>OpenIPF Visualiser</h1>
+    <p>Welcome to my openIPF visualiser! <br>
+        To get started, download your file from the openIPF website.
         There should be a 'Download as CSV' button on your profile.
         Upload it here and select the filters that apply and bam.<br>
-        Note: if you want to changethe filters, you need to refresh/reupload the file.
+        <strong>Note: </strong>if you want to change the filters, you need to refresh/reupload the file.
         <br>
         <br> 
-        THE GRAPHS ARE INTERACTIVE!!!Hover over the points to see extra info 
-        or double-click on the lines to look at a specific series of data!
+        <strong>THE GRAPHS ARE INTERACTIVE!!!</strong><br>
+         Hover over the points to see extra info 
+        or double-click on the lines in the key to look at a specific series of data!
         <br>
-        <br>
-        Suggestions/To do list :
-        <br>
-        -colour individual lifts by meet
-        (probably won't do this since it might be annoying if someone has been competing for a long time)
-        <br>
-        -Find a better way to deal with failed attempts
-
+<p style="font-size: 15px; color:#1F9AFE;">
+<a href="page2.html" target="_self">Contact Me</a>
+</p>
     </p>
     <form id="uploadForm">
         <input type="file" id="fileInput" accept=".csv" />
         <button type="submit">Upload and Visualize</button>
     </form>
 
-    <!-- Filters for Event and Equipment -->
+    <!-- Event and Equipment -->
     <div class="filters">
         <div>
             <strong>Event:</strong>
@@ -145,7 +148,6 @@
     <!-- Plot for Deadlift Attempts -->
     <div id="plot-deadlift" style="width: 100%; height: 400px;"></div>
     <div id="deadlift-stats" class="lift-stats"></div>
-
-    <!-- Link to your compiled TypeScript file (main.ts) -->
+
 </body>
 </html>
