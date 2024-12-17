@@ -312,6 +312,8 @@ function displayLiftStats(data: any[], lift: string) {
 
 // Function to generate the summary info before the graph
 function generateSummaryInfo(data: any[]) {
+    const eventFilter = (document.querySelector('input[name="event"]:checked') as HTMLInputElement)?.value;
+
     // Get the most recent data (latest entry) for Weight Class and Name
     const mostRecentData = data.reduce((latest, row) => {
         return new Date(row.Date) > new Date(latest.Date) ? row : latest;
@@ -325,6 +327,14 @@ function generateSummaryInfo(data: any[]) {
     const bestDeadlift = Math.max(...data.map((row) => row.Deadlift || 0));
     const total = bestSquat + bestBench + bestDeadlift;
 
+    let sbdRatio='';
+    if (eventFilter === 'SBD') {
+        const percSquat = ((bestSquat / total) * 100).toFixed(2);
+        const percBench = ((bestBench / total) * 100).toFixed(2);
+        const percDeadlift = ((bestDeadlift / total) * 100).toFixed(2);
+        sbdRatio = `<div><strong>SBD Ratio:</strong> ${percSquat}: ${percBench}: ${percDeadlift}%</div>`;
+    }
+
     // Populate the summary info section
     const summaryInfo = document.getElementById('summary-info') as HTMLElement;
     summaryInfo.innerHTML = `
@@ -334,5 +344,6 @@ function generateSummaryInfo(data: any[]) {
         <div><strong>Best Bench:</strong> ${bestBench} kg</div>
         <div><strong>Best Deadlift:</strong> ${bestDeadlift} kg</div>
         <div><strong>Total of Best Lifts:</strong> ${total} kg</div>
-    `;
+        ${sbdRatio}
+        `;
 }
