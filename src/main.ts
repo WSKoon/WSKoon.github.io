@@ -174,59 +174,55 @@ function createLiftsOverTimePlot(data: any[]) {
 
 
 
-// Function to create individual attempts graph for each lift (Squat, Bench, Deadlift)
+//Changed function to plot attempts over time
 function createAttemptsGraph(data: any[], lift: string, containerId: string) {
     const dates = data.map((row) => row.Date);
 
-    // Define color mapping for each lift (consistent with the main graph)
-    const liftColors: { [key: string]: string } = {
-        'Squat': 'blue',
-        'Bench': 'red',
-        'Deadlift': 'green',
+    // Define color mapping for each attempt
+    const liftColors2= {
+        Squat: ['#99CCFF', '#3366FF','#0000FF',], 
+        Bench: ['#FF9999', '#FF6666', '#FF0000'], 
+        Deadlift: ['#99FF99', '#33CC33', '#008000'],
     };
 
     // Attempt columns for Squat, Bench, and Deadlift
     const attemptColumns = [`${lift}1Kg`, `${lift}2Kg`, `${lift}3Kg`];
 
     // Creating traces for each date
-    const traces = data.map((row) => {
-        // Initialize x and y values with placeholders for alignment
-        const xValues: number[] = [1, 2, 3]; // Fixed x-axis positions for attempts
-        const yValues: (number | null)[] = [null, null, null]; // Default to null for all attempts
-        const hovertext: string[] = []; // Stores hover text for all attempts
-
-        // Format the date as 'YYYY-MM-DD' for the hover text
-        const formattedDate = row.Date.toISOString().split('T')[0];
-
-        // Populate yValues and hover text for each attempt
-        attemptColumns.forEach((col, index) => {
-            const weight = row[col]; // Weight for this attempt
-            if (weight && weight > 0) {
-                // Valid attempt
-                yValues[index] = weight; // Assign weight to the corresponding x-position
-                hovertext.push(`Date: ${formattedDate}<br>Attempt ${index + 1}: ${weight} kg`);
-            } else {
-                // Failed or invalid attempt
-                hovertext.push(`Date: ${formattedDate}<br>Attempt ${index + 1}: Failed`);
-            }
+    const traces = attemptColumns.map((col,attemptIndex) => {
+        const xValues=  data.map(row => row.Date);
+        const yValues= data.map(row => {
+            const weight= row[col];
+            return weight ? Math.abs(weight): null
         });
+        //make black if no lift
+        const markerColor=data.map(row =>{
+            const weight = row[col];
+            return weight > 0 ? liftColors2[lift][attemptIndex] : '#000000'; 
+        });
+        const hovertext= data.map(row =>{
+            const weight = row[col]
+            const fail = weight >0 ? 'Good lift' : 'No lift';
+            const formattedDate = row.Date.toISOString().split('T')[0];
 
-        return {
-            x: xValues, // Fixed x-axis positions
-            y: yValues, // Include nulls for failed attempts
-            name: formattedDate, // Simplified legend name (date in 'YYYY-MM-DD' format)
-            mode: 'lines+markers',
-            type: 'scatter',
-            line: { color: liftColors[lift] }, // Use the color assigned to each lift
-            hovertext: hovertext, // Show hover-over text with details
-            hoverinfo: 'text+x+y',
-        };
-    });
-
-    // Layout configuration for the graph
+            return `Date: ${formattedDate} <br> Weight: ${Math.abs(weight||0)}
+            <br> Attempt: ${fail}`;
+        });
+    return{
+        x: xValues,
+        y:yValues,
+        name: `Attempt${attemptIndex+1}`,
+        mode: 'lines+markers',
+        type: 'scatter',
+        line:{color:liftColors2[lift][attemptIndex]},
+        marker:{color:markerColor, size:8},
+        hovertext:hovertext,
+        hoverinfo: 'text',
+    }
+});
     const layout = {
         title: `${lift} Attempts`,
-        xaxis: { title: 'Attempt Number', tickvals: [1, 2, 3], ticktext: ['Attempt 1', 'Attempt 2', 'Attempt 3'] },
+        xaxis: { title: 'Date', type:'date' },
         yaxis: { title: `${lift} Weight (Kg)` },
         hovermode: 'closest', // Hover interaction
         paper_bgcolor: '#e8e6e7',
